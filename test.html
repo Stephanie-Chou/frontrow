@@ -1,22 +1,57 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <script src="http://fb.me/react-0.10.0.js"></script>
+    <script src="http://fb.me/JSXTransformer-0.10.0.js"></script>
 <script>
 
-var xhr = new XMLHttpRequest();
-xhr.open("GET", "http://api.example.com/data.json", true);
-xhr.onreadystatechange = function() {
-  if (xhr.readyState == 4) {
-    // innerText does not let the attacker inject HTML elements.
-    document.getElementById("resp").innerText = xhr.responseText;
+
+var request = new XMLHttpRequest();
+
+if (request == null){
+        alert("Unable to create request");
+    }else{
+
+        var url = "http://www.ldoceonline.com/dictionary/manga";
+
+        request.onreadystatechange = function()
+            {
+            if(request.readyState == 4)
+            {
+                LDResponse(request.responseText);
+            }
+        }
+
+        request.open("GET", url, true);
+        request.send(null);
+    }
+
+
+</script>
+
+<script type="text/jsx">
+var HelloWorld = React.createClass({
+  render: function() {
+    return (
+      <p>
+        Hello, <input type="text" placeholder="Your name here" />!
+        It is {this.props.date.toTimeString()}
+      </p>
+    );
   }
-}
-xhr.send();
+});
+
+setInterval(function() {
+  React.renderComponent(
+    <HelloWorld date={new Date()} />,
+    document.getElementById('example')
+  );
+}, 500);
 </script>
 </head>
 <body>
 
-
+  <p>stuff</p>
 
 </body>
 </html>
