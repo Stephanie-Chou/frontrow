@@ -9,27 +9,29 @@ var books = React.createClass({
   getInitialState: function(){
     return { shelf: "You should choose some books"}
   },
-  getBooks: function(){
-    console.log("getting books");
+  getBooks: function(e){
+    e.preventDefault();
+    this.setState({shelf: "hellos"})
     var request = new XMLHttpRequest();
     request.onreadystatechange = function() {
       if (request.readyState == 3){
         showSpinner();
-        console.log(this);
       }
       if (request.readyState == 4) {
         this.setState({
           shelf: request.responseText
         });
-        // JSON.parse(request.responseText)
       }
     }.bind(this);
     request.open('GET', "https://www.googleapis.com/books/v1/volumes?q=react.js+javascript", true);
     request.send(null);
   },
   render: function(){
-
-    return (<p><input type="submit" value="Show Books" onsubmit={this.getBooks}/>{this.state.shelf}</p>
+    return (
+      <form onSubmit={this.getBooks}>
+        <input type="submit" value="Show Books" />
+        {this.state.shelf}
+      </form>
       )
   }
 })
