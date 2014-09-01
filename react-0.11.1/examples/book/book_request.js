@@ -10,6 +10,7 @@ var books = React.createClass({
     return { shelf: "You should choose some books"}
   },
   getBooks: function(){
+    console.log("getting books");
     var request = new XMLHttpRequest();
     request.onreadystatechange = function() {
       if (request.readyState == 3){
@@ -27,15 +28,11 @@ var books = React.createClass({
     request.send(null);
   },
   render: function(){
-    return (<p>{this.state.shelf}</p> )
+
+    return (<p><input type="submit" value="Show Books" onsubmit={this.getBooks}/>{this.state.shelf}</p>
+      )
   }
 })
-
-function parseResponse(json){
-  console.log(json);
-  console.log()
-}
-
 
 React.renderComponent(
   <books/>,
