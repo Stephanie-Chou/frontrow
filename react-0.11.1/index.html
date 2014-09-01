@@ -2,18 +2,78 @@
 <html>
   <head>
     <meta http-equiv='Content-type' content='text/html; charset=utf-8'>
-    <title>yelp info</title>
+    <title>Coding Books</title>
   </head>
   <body>
-    <h1>HELLO</h1>
-    <p>hello</p>
-    <div id = "response"></div>
+    <h1>Books</h1>
+    <div id = "books"></div>
+
+
+
+
     <script src="examples/shared/thirdparty/es5-shim.min.js"></script>
     <script src="examples/shared/thirdparty/es5-sham.min.js"></script>
     <script src="examples/shared/thirdparty/console-polyfill.js"></script>
     <script src="build/react.js"></script>
     <script src="build/JSXTransformer.js"></script>
-    <script type="text/jsx" src="yelp.js"></script>
 
+    <script type="text/jsx">
+      function showSpinner(){
+        console.log("show a spinner");
+      }
+
+
+      var BallmerPeakCalculator = React.createClass({
+        getInitialState: function() {
+          return {bac: 0};
+        },
+        handleChange: function(event) {
+          this.setState({bac: event.target.value});
+        },
+        render: function() {
+          var pct = computeBallmerPeak(this.state.bac);
+          if (isNaN(pct)) {
+            pct = 'N/A';
+          } else {
+            pct = (100 - Math.round(pct * 100)) + '%';
+          }
+          return (
+            <div>
+              <img src="./ballmer_peak.png" />
+              <p>Credit due to <a href="http://xkcd.com/323/">xkcd</a>.</p>
+              <h4>Compute your Ballmer Peak:</h4>
+              <p>
+                If your BAC is{' '}
+                <input type="text" onChange={this.handleChange} value={this.state.bac} />
+                {', '}then <b>{pct}</b> of your lines of code will be bug free.
+              </p>
+            </div>
+          );
+        }
+      });
+
+
+      var request = new XMLHttpRequest();
+      request.onreadystatechange = function() {
+         if (request.readyState == 3){
+          showSpinner();
+          console.log(this);
+         }
+        if (request.readyState == 4) {
+          JSON.parse(request.response)
+          alert(request.responseText);
+          // React.renderComponent(
+          //   <BallmerPeakCalculator />,
+          //   document.getElementById('container')
+          // );
+
+        }
+      }
+
+
+      request.open('GET', "https://www.googleapis.com/books/v1/volumes?q=react.js+javascript", true);
+      request.send(null);
+
+    </script>
   </body>
 </html>
