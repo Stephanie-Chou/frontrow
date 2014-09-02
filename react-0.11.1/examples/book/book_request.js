@@ -9,36 +9,49 @@ var books = React.createClass({
   getInitialState: function(){
     return { shelf: "You should choose some books"}
   },
+  volumeRender: function(volume){
+    return (
+      <div>
+      <h2>{volume.title}</h2>
+      <p>Written By {volume.authors[0]}</p>
+      <p>{volume.description}</p>
+      </div>
+      );
+  },
   getBooks: function(e){
     e.preventDefault();
-    this.setState({shelf: "hellos"})
     var request = new XMLHttpRequest();
     request.onreadystatechange = function() {
-      this.setState({shelf: 'no request to make'});
-    //   if (request.readyState == 3){
-    //     showSpinner();
-    //   }
-    //   if (request.readyState == 4) {
-    //     this.setState({
-    //       shelf: JSON.parse(request.responseText).items
-    //     });
-    //     var volumeInfos = [];
-    //     var items = JSON.parse(this.state.shelf);
-    //     for (var i = 0; i < items.length; i ++){
-    //       volumeInfos.push(items[i].volumeInfo);
-    //     }
-    //   }
+      if (request.readyState == 3){
+        showSpinner();
+      }
+      if (request.readyState == 4) {
+        items = JSON.parse(request.response).items
+        var volumes = [];
+        for (var i = 0; i < items.length; i ++){
+          // var volume = new Parse.Object("Volume");
+          // volume._hashedJSON = this.state.shelf[i].volumeInfo
+          var volume = items[i].volumeInfo;
+          var volumeRender = this.volumeRender(volume);
+          volumes.push(volumeRender);
+        }
+        this.setState({
+          shelf: volumes,
+          books: <p>books</p>
+        });
+      }
      }.bind(this);
-    // request.open('GET', "https://www.googleapis.com/books/v1/volumes?q=react.js+javascript", true);
-    // request.send(null);
+    request.open('GET', "https://www.googleapis.com/books/v1/volumes?q=harry+potter", true);
+    request.send(null);
   },
   render: function(){
     return (
       <form onSubmit={this.getBooks}>
         <input type="submit" value="Show Books" />
         {this.state.shelf}
+        {this.state.books}
       </form>
-      )
+    )
   }
 })
 
