@@ -12,7 +12,9 @@ var books = React.createClass({
   volumeRender: function(volume){
     return (
       <div>
-      <h2>{volume.title}</h2>
+      <div className="inline">
+        <h2>{volume.title}</h2><vote/>
+      </div>
       <p>Written By {volume.authors[0]}</p>
       <p>{volume.description}</p>
       </div>
@@ -41,13 +43,14 @@ var books = React.createClass({
         });
       }
      }.bind(this);
-    request.open('GET', "https://www.googleapis.com/books/v1/volumes?q=harry+potter", true);
+     //"https://www.googleapis.com/books/v1/volumes?q=harry+potter"
+    request.open('GET', "harry_potter.txt", true);
     request.send(null);
   },
   render: function(){
     return (
       <form onSubmit={this.getBooks}>
-        <input type="submit" value="Show Books" />
+        <input className="btn" type="submit" value="Show Books" />
         {this.state.shelf}
         {this.state.books}
       </form>
@@ -60,6 +63,28 @@ React.renderComponent(
   document.getElementById('books')
 );
 
+
+var vote = React.createClass({
+  getInitialState: function() {
+    return {up: false,
+      count: 0
+    };
+  },
+  handleClick: function(event) {
+    this.setState({
+      count: this.state.count+1
+    });
+  },
+  handleHover: function(event){
+    this.setState({
+      hover: !this.state.hover
+    });
+  },
+  render: function() {
+    var text = this.state.hover ? "upVoted icon-arrow-up" : "notVoted icon-arrow-up";
+    return (<p><i onMouseOver={this.handleHover} onClick= {this.handleClick} className={text}></i>{this.state.count}</p>);
+  }
+});
 
 
 //"https://maps.googleapis.com/maps/api/geocode/json?address=northbrook,+il&key=AIzaSyAVkmq_gu_UwQiR7znb8Bf0_mktYaEDt0E"
