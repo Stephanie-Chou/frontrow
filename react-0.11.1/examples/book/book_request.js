@@ -1,5 +1,5 @@
 /** @jsx React.DOM */
-Parse.initialize("6oVE1dCz5UGqdElHMO5sVgcSxf0PpZiNps1UmaEN", "j9dYo1DxhrBCQ4zPI3A8f58NxkV9ItsW0AaVOZ4t");
+// Parse.initialize("6oVE1dCz5UGqdElHMO5sVgcSxf0PpZiNps1UmaEN", "j9dYo1DxhrBCQ4zPI3A8f58NxkV9ItsW0AaVOZ4t");
 
 function showSpinner(){
   console.log("show a spinner");
@@ -11,12 +11,13 @@ var books = React.createClass({
   },
   volumeRender: function(volume){
     return (
-      <div>
-      <div className="inline">
-        <h2>{volume.title}</h2><vote/>
-      </div>
-      <p>Written By {volume.authors[0]}</p>
-      <p>{volume.description}</p>
+      <div className="panel panel-info">
+        <div className="panel-heading">
+          <h3 className="panel-title">{volume.title}</h3><vote/><p>Written By {volume.authors[0]}</p>
+        </div>
+        <div className="panel-body">
+          {volume.description}
+        </div>
       </div>
       );
   },
@@ -31,15 +32,12 @@ var books = React.createClass({
         items = JSON.parse(request.response).items
         var volumes = [];
         for (var i = 0; i < items.length; i ++){
-          // var volume = new Parse.Object("Volume");
-          // volume._hashedJSON = this.state.shelf[i].volumeInfo
           var volume = items[i].volumeInfo;
-          var volumeRender = this.volumeRender(volume);
-          volumes.push(volumeRender);
+          var volumeRendered = this.volumeRender(volume);
+          volumes.push(volumeRendered);
         }
         this.setState({
           shelf: volumes,
-          books: <p>books</p>
         });
       }
      }.bind(this);
@@ -52,7 +50,6 @@ var books = React.createClass({
       <form onSubmit={this.getBooks}>
         <input className="btn" type="submit" value="Show Books" />
         {this.state.shelf}
-        {this.state.books}
       </form>
     )
   }
@@ -66,7 +63,8 @@ React.renderComponent(
 
 var vote = React.createClass({
   getInitialState: function() {
-    return {up: false,
+    return {
+      hover: false,
       count: 0
     };
   },
@@ -75,14 +73,19 @@ var vote = React.createClass({
       count: this.state.count+1
     });
   },
-  handleHover: function(event){
+  handleMouseOver: function(event){
     this.setState({
-      hover: !this.state.hover
+      hover: true
+    });
+  },
+  handleMouseOut: function(event){
+    this.setState({
+      hover: false
     });
   },
   render: function() {
-    var text = this.state.hover ? "upVoted icon-arrow-up" : "notVoted icon-arrow-up";
-    return (<p><i onMouseOver={this.handleHover} onClick= {this.handleClick} className={text}></i>{this.state.count}</p>);
+    var text = this.state.hover ? "upVoted glyphicon glyphicon-book" : "notVoted glyphicon glyphicon-book";
+    return (<div className = "vote"><span onMouseOver={this.handleMouseOver} onMouseOut = {this.handleMouseOut} onClick= {this.handleClick} className={text}></span><span className="badge">{this.state.count}</span></div>);
   }
 });
 
